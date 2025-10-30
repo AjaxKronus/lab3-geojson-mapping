@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>US Cities Population Map</title>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .sidebar {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 420px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(240, 248, 255, 0.97));
+            overflow-y: auto;
+            padding: 25px;
+            z-index: 1;
+            box-shadow: -3px 0 15px rgba(0,0,0,0.15);
+        }
+
+        .sidebar h1 {
+            font-size: 26px;
+            margin-bottom: 8px;
+            color: #1e3a8a;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 10px;
+        }
+
+        .sidebar .subtitle {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            color: #334155;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            cursor: pointer;
+            user-select: none;
+            font-weight: 600;
+        }
+
+        th:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            background-color: white;
+        }
+
+        tr:hover td {
+            background-color: #f1f5f9;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .legend {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .legend h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #334155;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid white;
+            box-shadow: 0 0 3px rgba(0,0,0,0.3);
+        }
+
+        /* Hide sidebar on small screens */
+        @media (max-width: 1023px) {
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div class="sidebar">
+        <h1>US Cities Explorer</h1>
+        <p class="subtitle">Major cities and state boundaries visualization</p>
+        
+        <div class="legend">
+            <h3>Population Legend</h3>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #eff6ff;"></div>
+                <span>&lt; 500K</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #93c5fd;"></div>
+                <span>500K - 1M</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #3b82f6;"></div>
+                <span>1M - 5M</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #1e40af;"></div>
+                <span>&gt; 5M</span>
+            </div>
+        </div>
+
+        <h2>City Population Data</h2>
+        <p style="font-size: 12px; color: #64748b; margin-bottom: 10px;">Click headers to sort</p>
+        <table id="city-table">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">City</th>
+                    <th onclick="sortTable(1)">State</th>
+                    <th onclick="sortTable(2)">Population</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <!-- Data will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Mapbox access token - REPLACE WITH YOUR OWN TOKEN
+        mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
+
+        // Initialize map
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/light-v11',
+            center: [-98, 39],
+            zoom: 3.5
+        });
+
+        // Global variable for table data
+        let tableData = [];
+        let currentSortColumn = -1;
+        let sortAscending = true;
+
+        // Sample city data - you can replace this with your own GeoJSON file
+        const cityData = {
+            type: 'FeatureCollection',
+            features: [
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-118.2437, 34.0522] }, properties: { city: 'Los Angeles', state: 'CA', population: 3979576 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-87.6298, 41.8781] }, properties: { city: 'Chicago', state: 'IL', population: 2693976 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-95.3698, 29.7604] }, properties: { city: 'Houston', state: 'TX', population: 2320268 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-112.0740, 33.4484] }, properties: { city: 'Phoenix', state: 'AZ', population: 1680992 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-75.1652, 39.9526] }, properties: { city: 'Philadelphia', state: 'PA', population: 1584064 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-98.4936, 29.4241] }, properties: { city: 'San Antonio', state: 'TX', population: 1547253 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-117.1611, 32.7157] }, properties: { city: 'San Diego', state: 'CA', population: 1423851 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-96.7970, 32.7767] }, properties: { city: 'Dallas', state: 'TX', population: 1343573 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-121.8863, 37.3382] }, properties: { city: 'San Jose', state: 'CA', population: 1021795 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-97.7431, 30.2672] }, properties: { city: 'Austin', state: 'TX', population: 978908 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-86.1584, 39.7684] }, properties: { city: 'Indianapolis', state: 'IN', population: 876384 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-122.4194, 37.7749] }, properties: { city: 'San Francisco', state: 'CA', population: 873965 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-82.9988, 39.9612] }, properties: { city: 'Columbus', state: 'OH', population: 898553 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-97.3308, 32.7555] }, properties: { city: 'Fort Worth', state: 'TX', population: 918915 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-80.1918, 25.7617] }, properties: { city: 'Miami', state: 'FL', population: 467963 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-122.3321, 47.6062] }, properties: { city: 'Seattle', state: 'WA', population: 753675 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-104.9903, 39.7392] }, properties: { city: 'Denver', state: 'CO', population: 715522 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-77.0369, 38.9072] }, properties: { city: 'Washington', state: 'DC', population: 705749 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-71.0589, 42.3601] }, properties: { city: 'Boston', state: 'MA', population: 692600 } },
+                { type: 'Feature', geometry: { type: 'Point', coordinates: [-115.1398, 36.1699] }, properties: { city: 'Las Vegas', state: 'NV', population: 641903 } }
+            ]
+        };
+
+        // Load map
+        map.on('load', () => {
+            // Add city data source
+            map.addSource('cities', {
+                type: 'geojson',
+                data: cityData
+            });
+
+            // Add city circles layer
+            map.addLayer({
+                id: 'city-circles',
+                type: 'circle',
+                source: 'cities',
+                paint: {
+                    'circle-radius': [
+                        'interpolate',
+                        ['linear'],
+                        ['get', 'population'],
+                        100000, 6,
+                        500000, 10,
+                        1000000, 15,
+                        5000000, 25
+                    ],
+                    'circle-color': [
+                        'interpolate',
+                        ['linear'],
+                        ['get', 'population'],
+                        100000, '#eff6ff',
+                        500000, '#93c5fd',
+                        1000000, '#3b82f6',
+                        5000000, '#1e40af'
+                    ],
+                    'circle-opacity': 0.8,
+                    'circle-stroke-width': 2,
+                    'circle-stroke-color': '#fff'
+                }
+            });
+
+            // Add city labels
+            map.addLayer({
+                id: 'city-labels',
+                type: 'symbol',
+                source: 'cities',
+                layout: {
+                    'text-field': ['get', 'city'],
+                    'text-size': 12,
+                    'text-offset': [0, 1.5],
+                    'text-anchor': 'top'
+                },
+                paint: {
+                    'text-color': '#1e3a8a',
+                    'text-halo-color': '#fff',
+                    'text-halo-width': 2
+                }
+            });
+
+            // Load US states boundaries
+            fetch('https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json')
+                .then(response => response.json())
+                .then(data => {
+                    map.addSource('states', {
+                        type: 'geojson',
+                        data: data
+                    });
+
+                    map.addLayer({
+                        id: 'state-fills',
+                        type: 'fill',
+                        source: 'states',
+                        paint: {
+                            'fill-color': '#10b981',
+                            'fill-opacity': 0.05
+                        }
+                    });
+
+                    map.addLayer({
+                        id: 'state-borders',
+                        type: 'line',
+                        source: 'states',
+                        paint: {
+                            'line-color': '#059669',
+                            'line-width': 1.5,
+                            'line-opacity': 0.5
+                        }
+                    });
+                })
+                .catch(error => console.error('Error loading states data:', error));
+
+            // Populate table
+            populateTable(cityData.features);
+
+            // Add popups on click
+            map.on('click', 'city-circles', (e) => {
+                const coordinates = e.features[0].geometry.coordinates.slice();
+                const props = e.features[0].properties;
+                
+                new mapboxgl.Popup()
+                    .setLngLat(coordinates)
+                    .setHTML(`
+                        <strong>${props.city}, ${props.state}</strong><br>
+                        Population: ${props.population.toLocaleString()}
+                    `)
+                    .addTo(map);
+            });
+
+            map.on('mouseenter', 'city-circles', () => {
+                map.getCanvas().style.cursor = 'pointer';
+            });
+
+            map.on('mouseleave', 'city-circles', () => {
+                map.getCanvas().style.cursor = '';
+            });
+        });
+
+        // Populate table function
+        function populateTable(features) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+            
+            tableData = features.map(feature => ({
+                city: feature.properties.city,
+                state: feature.properties.state,
+                population: feature.properties.population
+            }));
+
+            tableData.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.city}</td>
+                    <td>${row.state}</td>
+                    <td>${row.population.toLocaleString()}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Sort table function
+        function sortTable(columnIndex) {
+            const tbody = document.getElementById('table-body');
+            const keys = ['city', 'state', 'population'];
+            const key = keys[columnIndex];
+
+            // Toggle sort direction if same column
+            if (currentSortColumn === columnIndex) {
+                sortAscending = !sortAscending;
+            } else {
+                sortAscending = true;
+                currentSortColumn = columnIndex;
+            }
+
+            // Sort data
+            tableData.sort((a, b) => {
+                let valA = a[key];
+                let valB = b[key];
+
+                // Handle string comparison
+                if (typeof valA === 'string') {
+                    valA = valA.toLowerCase();
+                    valB = valB.toLowerCase();
+                }
+
+                if (valA < valB) return sortAscending ? -1 : 1;
+                if (valA > valB) return sortAscending ? 1 : -1;
+                return 0;
+            });
+
+            // Re-populate table
+            tbody.innerHTML = '';
+            tableData.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.city}</td>
+                    <td>${row.state}</td>
+                    <td>${row.population.toLocaleString()}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
