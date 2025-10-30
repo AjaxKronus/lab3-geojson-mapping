@@ -1,7 +1,7 @@
 # Lab 3: Asynchronous GeoJSON Data Loading and Visualization
 
-**Author:** [Your Name]  
-**Course:** GEOG XXX  
+**Author:** Amartya Chaube  
+**Course:** GEOG 328
 **Date:** October 30, 2025
 
 ## Project Description
