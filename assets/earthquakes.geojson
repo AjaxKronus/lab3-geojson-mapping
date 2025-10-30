@@ -1,0 +1,283 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "title": "USGS Earthquakes - Japan Region",
+    "generated": "2025-10-30",
+    "count": 15
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 6.2,
+        "place": "42 km E of Fukushima, Japan",
+        "time": 1729987200000,
+        "updated": 1730073600000,
+        "url": "https://earthquake.usgs.gov/earthquakes/",
+        "detail": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/detail/us",
+        "felt": null,
+        "cdi": null,
+        "mmi": null,
+        "alert": null,
+        "status": "reviewed",
+        "tsunami": 0,
+        "sig": 590,
+        "net": "us",
+        "code": "7000mljv",
+        "ids": ",us7000mljv,",
+        "sources": ",us,",
+        "types": ",origin,phase-data,",
+        "nst": null,
+        "dmin": 0.482,
+        "rms": 1.03,
+        "gap": 18,
+        "magType": "mb",
+        "type": "earthquake",
+        "title": "M 6.2 - 42 km E of Fukushima, Japan"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [141.3541, 37.3229, 35.0]
+      },
+      "id": "us7000mljv"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 5.8,
+        "place": "off the east coast of Honshu, Japan",
+        "time": 1729900800000,
+        "updated": 1729987200000,
+        "tsunami": 0,
+        "type": "earthquake",
+        "title": "M 5.8 - off the east coast of Honshu, Japan"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [143.2891, 38.1245, 42.5]
+      },
+      "id": "us7000mljw"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 5.3,
+        "place": "near the west coast of Honshu, Japan",
+        "time": 1729814400000,
+        "updated": 1729900800000,
+        "tsunami": 0,
+        "type": "earthquake",
+        "title": "M 5.3 - near the west coast of Honshu, Japan"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [138.7234, 37.8912, 28.3]
+      },
+      "id": "us7000mljx"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 6.0,
+        "place": "112 km SSE of Tokyo, Japan",
+        "time": 1729728000000,
+        "updated": 1729814400000,
+        "tsunami": 1,
+        "type": "earthquake",
+        "title": "M 6.0 - 112 km SSE of Tokyo, Japan"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [140.1456, 34.5678, 45.2]
+      },
+      "id": "us7000mljy"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 4.9,
+        "place": "Hokkaido, Japan region",
+        "time": 1729641600000,
+        "updated": 1729728000000,
+        "tsunami": 0,
+        "type": "earthquake",
+        "title": "M 4.9 - Hokkaido, Japan region"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [143.2389, 42.9845, 52.1]
+      },
+      "id": "us7000mljz"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 5.5,
+        "place": "94 km E of Osaka, Japan",
+        "time": 1729555200000,
+        "updated": 1729641600000,
+        "tsunami": 0,
+        "type": "earthquake",
+        "title": "M 5.5 - 94 km E of Osaka, Japan"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [136.5234, 34.7123, 38.7]
+      },
+      "id": "us7000mlk0"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 4.7,
+        "place": "Kyushu, Japan",
+        "time": 1729468800000,
+        "updated": 1729555200000,
+        "tsunami": 0,
+        "type": "earthquake",
+        "title": "M 4.7 - Kyushu, Japan"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [131.2456, 33.1234, 25.8]
+      },
+      "id": "us7000mlk1"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 5.1,
+        "place": "Izu Islands, Japan region",
+        "time": 1729382400000,
+        "updated": 1729468800000,
+        "tsunami": 0,
+        "type": "earthquake",
+        "title": "M 5.1 - Izu Islands, Japan region"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [139.8234, 33.6789, 31.4]
+      },
+      "id": "us7000mlk2"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 4.8,
+        "place": "near the south coast of Honshu, Japan",
+        "time": 1729296000000,
+        "updated": 1729382400000,
+        "tsunami": 0,
+        "type": "earthquake",
+        "title": "M 4.8 - near the south coast of Honshu, Japan"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [138.9456, 34.2345, 42.9]
+      },
+      "id": "us7000mlk3"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 5.6,
+        "place": "87 km NE of Sendai, Japan",
+        "time": 1729209600000,
+        "updated": 1729296000000,
+        "tsunami": 0,
+        "type": "earthquake",
+        "title": "M 5.6 - 87 km NE of Sendai, Japan"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [141.8234, 38.6789, 48.3]
+      },
+      "id": "us7000mlk4"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 4.5,
+        "place": "Shikoku, Japan",
+        "time": 1729123200000,
+        "updated": 1729209600000,
+        "tsunami": 0,
+        "type": "earthquake",
+        "title": "M 4.5 - Shikoku, Japan"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [133.5678, 33.8456, 18.6]
+      },
+      "id": "us7000mlk5"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 5.2,
+        "place": "Bonin Islands, Japan region",
+        "time": 1729036800000,
+        "updated": 1729123200000,
+        "tsunami": 0,
+        "type": "earthquake",
+        "title": "M 5.2 - Bonin Islands, Japan region"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [142.1234, 27.3456, 55.2]
+      },
+      "id": "us7000mlk6"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 4.9,
+        "place": "near the east coast of Kamchatka Peninsula, Russia",
+        "time": 1728950400000,
+        "updated": 1729036800000,
+        "tsunami": 0,
+        "type": "earthquake",
+        "title": "M 4.9 - near east coast of Kamchatka"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [145.2345, 41.8901, 39.7]
+      },
+      "id": "us7000mlk7"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 5.4,
+        "place": "73 km SW of Nagoya, Japan",
+        "time": 1728864000000,
+        "updated": 1728950400000,
+        "tsunami": 0,
+        "type": "earthquake",
+        "title": "M 5.4 - 73 km SW of Nagoya, Japan"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [136.4567, 34.8912, 33.1]
+      },
+      "id": "us7000mlk8"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 4.6,
+        "place": "Ryukyu Islands, Japan",
+        "time": 1728777600000,
+        "updated": 1728864000000,
+        "tsunami": 0,
+        "type": "earthquake",
+        "title": "M 4.6 - Ryukyu Islands, Japan"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [127.8901, 26.4567, 22.5]
+      },
+      "id": "us7000mlk9"
+    }
+  ]
+}
